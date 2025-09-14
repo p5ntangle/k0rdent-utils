@@ -1,0 +1,85 @@
+# Cluster parameters
+clusterNetwork:
+  pods:
+    cidrBlocks:
+      - "10.244.0.0/16"
+  services:
+    cidrBlocks:
+      - "10.96.0.0/12"
+
+# AWS cluster parameters
+region: ""
+sshKeyName: ""
+publicIP: false
+bastion:
+  enabled: false
+  disableIngressRules: false
+  allowedCIDRBlocks: []
+  instanceType: t2.micro
+  ami: ""
+clusterIdentity:
+  name: ""
+  kind: "AWSClusterStaticIdentity"
+# AWS machines parameters
+controlPlane:
+  number: 3
+  amiID: ""
+  iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+  instanceType: ""
+  rootVolumeSize: 8
+  imageLookup:
+    format: "amzn2-ami-hvm*-gp2"
+    org: "137112412989"
+    baseOS: ""
+
+worker:
+  number: 2
+  amiID: ""
+  iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+  instanceType: ""
+  rootVolumeSize: 8
+  imageLookup:
+    format: "amzn2-ami-hvm*-gp2"
+    org: "137112412989"
+    baseOS: ""
+
+ingress:
+  number: 2
+  amiID: ""
+  iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+  instanceType: ""
+  rootVolumeSize: 8
+  imageLookup:
+    format: "amzn2-ami-hvm*-gp2"
+    org: "137112412989"
+    baseOS: ""
+
+gpu:
+  number: 0
+  amiID: ""
+  iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+  instanceType: "g5.xlarge"  # AWS instance type with NVIDIA A10G GPU
+  rootVolumeSize: 20
+  imageLookup:
+    format: "amzn2-ami-hvm*-gp2"
+    org: "137112412989"
+    baseOS: ""
+
+#oidc:
+#  oidcClientID:
+#  oidcGroupsClaim:
+#  oidcGroupsPrefix:
+#  oidcIssuerURL:
+#  oidcUsernameClaim:
+#  oidcUsernamePrefix:
+  
+# K0s parameters
+k0s:
+  version: v1.31.5+k0s.0
+  api: # @schema description: Kubernetes API server parameters; type: object
+    extraArgs: {} # @schema description: Map of key-values (strings) for any extra arguments to pass down to Kubernetes api-server process; type: object; additionalProperties: true
+# extensions defines custom Helm and image repositories to use for pulling
+# k0s extensions.
+extensions:
+  chartRepository: ""
+  imageRepository: ""
