@@ -20,7 +20,7 @@ jobs:
         name: aws-standalone-cp-gpu
         repository: p5ntangle/k0rdent-templates
         tag: 0.0.2
-        path: tempplates/aws-standalone-cp-gpu
+        path: templates/aws-standalone-cp-gpu
         registry: ghcr.io
         registry_username: ${{ github.actor }}
         registry_password: ${{ secrets.GITHUB_TOKEN }}
