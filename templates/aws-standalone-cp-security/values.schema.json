@@ -330,6 +330,14 @@
           "type": "integer",
           "minimum": 8
         },
+        "securityGroupIDs": {
+          "description": "An array of security groups' IDs that should be applied to the instance",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
         "uncompressedUserData": {
           "description": "Specify whether the user data is gzip-compressed before it is sent to ec2 instance. Cloud-init has built-in support for gzip-compressed user data. User data stored in aws secret manager is always gzip-compressed",
           "type": "boolean"
@@ -340,14 +348,6 @@
       "description": "The number of the worker machines",
       "type": "integer",
       "minimum": 1
-    },
-    "securityGroupIDs": {
-      "description": "An array of security groups' IDs that should be applied to the instance",
-      "type": "array",
-      "uniqueItems": true,
-      "items": {
-        "type": "string"
-      }
     }
   }
 }
