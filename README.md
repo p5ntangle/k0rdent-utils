@@ -1,21 +1,21 @@
 # k0rdent-utils
-A guide to creating and modifying customer k0rdent templates
+A guide to creating and modifying custom k0rdent templates
 
 Table of Contents
 
 * [Overview](#overview)
-* [Create your own Templates](#create-your-own-tenplates)
+* [Create your own Templates](#create-your-own-templates)
 * [Adding your repo to k0rdent](#add-the-repo-to-k0rdent)
 * [Checking your work](#checking-your-work)
 
 ## Overview
 
-This is a rough guide on the process of creating your own custom k0rdent Cluster Templates. 
+This is a rough guide to creating your own custom k0rdent Cluster Templates.
 
-The basic process shown here requires you to have access to GitHub and have the actions 
-setup to turn your charts into packages that can be served from github. An example of this 
+The process shown here requires you to have access to GitHub and have the actions
+setup to turn your charts into packages that can be served from github. An example of this
 can be found in the [k0rdent-utils](https://github.com/p5ntangle/k0rdent-utils) project
-on github.
+on github. You can of course use your own OCI Repository and create the packages yourself.
 
 Essential Skills:
 
@@ -28,13 +28,13 @@ Local tools:
 * Helm
 * Kubectl (or Lens)
 
-## Create your own Tenplates
+## Create your own Templates
 
 To create your own templates you need to have a basic understanding of the CAPI 
 providers CRD model `infrastructure.cluster.x-k8s.io` and `cluster.x-k8s.io`.
 
-There are at least 7 objects that make up a typical Cluster Template (this is a 
-example for AWS):
+There are at least 7 objects that make up a typical Cluster Template (this is a
+example for the [AWS Provider](https://github.com/kubernetes-sigs/cluster-api-provider-aws):
 
 | Typical Filename | apiVersion | Object | Purpose |
 |-----------------| ------------|--------| --------|
@@ -52,11 +52,11 @@ example for AWS):
 Once you have made your changes and setup you configuration there are few commands that
 can help you validate your work.
 
-Start by creating a version of the [`Cluster Deployment`](https://docs.k0rdent.io/latest/user/user-create-cluster/) yaml locally removing everything above and including the `spec` and saving it as `testvalues.yaml` 
+Start by creating a version of the [`Cluster Deployment`](https://docs.k0rdent.io/latest/user/user-create-cluster/) yaml locally removing everything above and including the `spec` and saving it as `testvalues.yaml`
 
 ### Checking your work
 
-1. Lint the chart locally
+1. Lint the chart locally, and correct any errors.
 
 ``` BASH
 helm lint ./mychart
@@ -68,13 +68,13 @@ helm lint ./mychart
 helm template myrelease ./ --values testvalues.yaml
 ```
 
-3. Test the ouput by providing a example cluster deployment against a live system
+3. Test the chart by providing a example cluster deployment against a live system
 
 ``` BASH
 helm install  my-charts-name ./ --dry-run --values testvalues.yaml --debug
 ```
 
-## Add the repo to k0rdent 
+## Add the repo to k0rdent
 
 Deploying a custom template to k0rdent requires a few basic setup steps:
 
@@ -122,7 +122,8 @@ EOF
 
 2. Create the template object
 
-NOTE: the object is immutable, so if you need to change something you need to delete is and recreate it, don't do this after deploying a cluster with the template (see template chains for that)
+>[!NOTE]
+> the object is immutable, so if you need to change something you need to delete is and recreate it, don't do this after deploying a cluster with the template (see template chains for that)
 
 ``` YAML
 apiVersion: k0rdent.mirantis.com/v1beta1
