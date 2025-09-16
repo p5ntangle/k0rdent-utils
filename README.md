@@ -7,6 +7,7 @@ Table of Contents
 * [Create your own Templates](#create-your-own-templates)
 * [Adding your repo to k0rdent](#add-the-repo-to-k0rdent)
 * [Checking your work](#checking-your-work)
+* [Template Modification Examples](#template-modification-examples)
 
 ## Overview
 
@@ -173,37 +174,73 @@ EOF
 
 `kubectl get clustertemplates aws-standalone-cp-security -n kcm-system -o yaml`
 
-## Useful Template Modifications
+## Template Modification Examples
 
 ### Extra Ingress Rules
 
-#### AWS 
-The AWS Provider supports adding extra ingress rules in the network section
+#### AWS Node Ingress Rules
+The AWS Provider supports adding extra Node ingress rules in the network section of the `AWSCluster` object. See the [aws-standalone-cp-security](https://github.com/p5ntangle/k0rdent-utils/tree/main/templates/aws-standalone-cp-security) template.
+
+The following was added to the awscluster.yaml (the  ~SNIP~ indicates config removed for clarity)
 
 ``` YAML
 apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
 kind: AWSCluster
-spec:
-    ~~
-    network:
-        AdditionalNodeIngressRules:
-        - description: grpc access rules for network automation
-          fromPort: 5111
-          protocol: tcp
-          toPort: 5111
+   ~SNIP~
+  network:
+     ~SNIP~
+    additionalNodeIngressRules:
+    {{- range .Values.worker.AdditionalNodeIngressRules }}
+      - description: {{ .description | quote }}
+        protocol: {{ .protocol | quote }}
+        fromPort: {{ .fromPort }}
+        toPort: {{ .toPort }}
+    {{- end }}
+     ~SNIP~
 ```
 
-in progress
+The values.schema.json had the "AdditionalNodeIngressRules" section added under the worker.
+
+``` JSON
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A KCM cluster aws-standalone-cp template",
+  "type": "object",
+  "required": [
+    "controlPlaneNumber",
+    "workersNumber",
+    "region",
+    "clusterIdentity"
+  ],
+    ~SNIP~
+    "worker": {
+      "description": "The configuration of the worker machines",
+      "type": "object",
+      "required": [
+        "iamInstanceProfile",
+        "instanceType"
+      ],
+      ~SNIP~
+      "AdditionalNodeIngressRules": {
+          "description": "An array of additional ingress rules to add to worker nodes' security groups",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object"
+          }
+     ~SNIP~
+```
+
+The default entry was added to values.yaml also under the worker.
 
 ``` YAML
-  
-    AdditionalNodeIngressRules:
-    {{- range $i, $value := .Values.worker.AdditionalNodeIngressRules }}
-      - description: {{ $value }}
-    {{- range $key, $val := $value }}
-        {{ $key }}: {{ $val }}
-    {{- end }}
+~SNIP~
+worker: # @schema description: The configuration of the worker machines; type: object
+  ~SNIP~
+  AdditionalNodeIngressRules: [] # @schema description: An array of additional ingress rules to add to worker nodes' security groups; type: array; item: object
+~SNIP~
 ```
+
 
 ## Github Workflow Notes
 
