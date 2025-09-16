@@ -6,8 +6,7 @@
     "controlPlaneNumber",
     "workersNumber",
     "region",
-    "clusterIdentity",
-    "securityGroupIDs"
+    "clusterIdentity"
   ],
   "properties": {
     "bastion": {
@@ -330,12 +329,12 @@
           "type": "integer",
           "minimum": 8
         },
-        "securityGroupIDs": {
-          "description": "An array of security groups' IDs that should be applied to the instance",
+        "AdditionalNodeIngressRules": {
+          "description": "An array of additional ingress rules to add to worker nodes' security groups",
           "type": "array",
           "uniqueItems": true,
           "items": {
-            "type": "string"
+            "type": "object"
           }
         },
         "uncompressedUserData": {

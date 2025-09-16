@@ -19,6 +19,13 @@ spec:
         protocol: tcp
         fromPort: 9443
         toPort: 9443
+    additionalNodeIngressRules:
+    {{- range .Values.worker.AdditionalNodeIngressRules }}
+      - description: {{ .description | quote }}
+        protocol: {{ .protocol | quote }}
+        fromPort: {{ .fromPort }}
+        toPort: {{ .toPort }}
+    {{- end }}
   {{- if not (quote .Values.sshKeyName | empty) }}
   sshKeyName: {{ .Values.sshKeyName | quote }}
   {{- end }}
