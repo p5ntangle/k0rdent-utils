@@ -20,7 +20,7 @@ spec:
         fromPort: 9443
         toPort: 9443
     additionalNodeIngressRules:
-    {{- range .Values.worker.AdditionalNodeIngressRules }}
+    {{- range .Values.worker.additionalNodeIngressRules }}
       - description: {{ .description | quote }}
         protocol: {{ .protocol | quote }}
         fromPort: {{ .fromPort }}

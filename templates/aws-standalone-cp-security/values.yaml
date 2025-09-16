@@ -51,7 +51,7 @@ worker: # @schema description: The configuration of the worker machines; type: o
     baseOS: "" # @schema description: The name of the base operating system to use for image lookup the AMI is not set; type: string
   uncompressedUserData: false # @schema description: Specify whether the user data is gzip-compressed before it is sent to ec2 instance. Cloud-init has built-in support for gzip-compressed user data. User data stored in aws secret manager is always gzip-compressed; type: boolean
   nonRootVolumes: [] # @schema title: Non-root storage volumes; description: Configuration options for the non root storage volumes, format: https://pkg.go.dev/sigs.k8s.io/cluster-api-provider-aws/v2/api/v1beta2#AWSMachineSpec.NonRootVolumes; type: array; item: object
-  AdditionalNodeIngressRules: [] # @schema description: An array of additional ingress rules to add to worker nodes' security groups; type: array; item: object
+  additionalNodeIngressRules: [] # @schema description: An array of additional ingress rules to add to worker nodes' security groups; type: array; item: object
 
 # K0s parameters
 # # NOTE: .k0s additional properties are to support prior .k0s.auth implementation
