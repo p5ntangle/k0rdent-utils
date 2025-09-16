@@ -1,7 +1,9 @@
 # k0rdent-utils
-A guide to creating and modifying customer Kordent templates
+A guide to creating and modifying customer k0rdent templates
 
 Table of Contents
+
+* [Overview](#overview)
 * [Create your own Templates](#create-your-own-tenplates)
 * [Adding your repo to k0rdent](#add-the-repo-to-k0rdent)
 * [Checking your work](#checking-your-work)
@@ -17,7 +19,7 @@ on github.
 
 Essential Skills:
 
-* Working knowledge of Helm Chart
+* Working knowledge of Helm Charts
 * Basic git commit skills
 
 Local tools:
@@ -37,14 +39,17 @@ example for AWS):
 | Typical Filename | apiVersion | Object | Purpose |
 |-----------------| ------------|--------| --------|
 | awscluster.yaml | apiVersion: infrastructure.cluster.x-k8s.io/v1beta2 | kind: AWSCluster | Common Cluster Config |
-| awsmachinetemplate-controlplane.yaml | apiVersion: infrastructure.cluster.x-k8s.io/v1beta2 | kind: AWSMachineTemplate | Control Plane Machine config ^1^ |
-| awsmachinetemplate-worker.yaml | apiVersion: infrastructure.cluster.x-k8s.io/v1beta2 | kind: AWSMachineTemplate | Worker node Machine config ^2^ |
+| awsmachinetemplate-controlplane.yaml | apiVersion: infrastructure.cluster.x-k8s.io/v1beta2 | kind: AWSMachineTemplate | Control Plane Machine config $^{1}$ |
+| awsmachinetemplate-worker.yaml | apiVersion: infrastructure.cluster.x-k8s.io/v1beta2 | kind: AWSMachineTemplate | Worker node Machine config $^{2}$ |
 | cluster.yaml | apiVersion: cluster.x-k8s.io/v1beta1 | kind: Cluster | CAPI Cluster definition reference |
 | k0scontrolplane.yaml | apiVersion: controlplane.cluster.x-k8s.io/v1beta1 | kind: K0sControlPlane | k0s control plane config |
 | k0sworkerconfigtemplate.yaml | apiVersion: bootstrap.cluster.x-k8s.io/v1beta1 | kind: K0sWorkerConfigTemplate | k0s worker config |
 | machinedeployment.yaml | apiVersion: cluster.x-k8s.io/v1beta1 | kind: MachineDeployment | Machine deployment config |
 
-Once you have made your changes and setup you configuration there are few commands that 
+1. Typical there should only be one control plane temples
+2. There could be multiple work templates, if you want to have multiple machine types in a cluster
+
+Once you have made your changes and setup you configuration there are few commands that
 can help you validate your work.
 
 Start by creating a version of the [`Cluster Deployment`](https://docs.k0rdent.io/latest/user/user-create-cluster/) yaml locally removing everything above and including the `spec` and saving it as `testvalues.yaml` 
@@ -69,8 +74,6 @@ helm template myrelease ./ --values testvalues.yaml
 helm install  my-charts-name ./ --dry-run --values testvalues.yaml --debug
 ```
 
-
-
 ## Add the repo to k0rdent 
 
 Deploying a custom template to k0rdent requires a few basic setup steps:
@@ -81,7 +84,7 @@ Deploying a custom template to k0rdent requires a few basic setup steps:
 
 The example below is using a open GitHub OCI registry.
 
-1. In order to use the templates you will need to add the helm repo that has you helm chart in it to k0rdent
+1. In order to use the templates you will need to add the helm repo that has you helm chart in it to k0rdent.
 
 ``` YAML
 apiVersion: source.toolkit.fluxcd.io/v1
@@ -99,6 +102,7 @@ spec:
 ```
 
 Simple command to add it from the command line.
+
 ``` BASH
 cat <<EOF | kubectl apply -f -
 apiVersion: source.toolkit.fluxcd.io/v1
@@ -139,7 +143,9 @@ spec:
         name: p5ntangle-templates
       version: 0.0.1
 ```
+
 Simple command to add it from the command line.
+
 ``` BASH
 cat <<EOF | kubectl apply -f -
 apiVersion: k0rdent.mirantis.com/v1beta1
@@ -165,10 +171,6 @@ EOF
 3. Check the status of the chart by examining the crd object.
 
 `kubectl get clustertemplates aws-standalone-cp-security -n kcm-system -o yaml`
-
-
-
-
 
 ## Useful Template Modifications
 
@@ -206,8 +208,8 @@ in progress
 
 1. Ensure that Chart.yaml and the workflow have the same version number
 
-
 ## Secure registry Authentication
+
 THIS NEEDS TO BE TESTED
 
 Here are the common ways to authenticate a Flux HelmRepository (HTTP/S and OCI). Pick the one that matches your repo.
@@ -241,7 +243,6 @@ Flux expects .data.username and .data.password for basic auth.  ￼
 
 If your repo requires a client certificate or uses a private CA, put the PEMs in a Secret and point certSecretRef at it.
 
-
 ``` BASH
 # tls.crt + tls.key optional pair, and/or ca.crt
 flux create secret tls repo-tls \
@@ -250,6 +251,7 @@ flux create secret tls repo-tls \
   --ca-crt-file=ca.crt \
   --namespace=default
 ```
+
 ``` YAML
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -262,6 +264,7 @@ spec:
   certSecretRef:
     name: repo-tls
 ```
+
 Use tls.crt/tls.key for client auth and ca.crt for server verification. (TLS via certSecretRef is the current, non-deprecated way.)  ￼
 
 3) OCI-backed Helm repo
@@ -269,6 +272,7 @@ Use tls.crt/tls.key for client auth and ca.crt for server verification. (TLS via
 Set type: oci. You can use basic auth or a dockerconfigjson-style pull secret.
 
 Option A — username/password:
+
 ``` YAML
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -292,12 +296,14 @@ stringData:
 ```
 
 Option B — docker-registry secret (recommended for registries):
+
 ``` BASH
 kubectl -n default create secret docker-registry ghcr-auth \
   --docker-server=ghcr.io \
   --docker-username=flux \
   --docker-password="$GITHUB_PAT"
 ```
+
 ``` YAML
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -310,10 +316,5 @@ spec:
   secretRef:
     name: ghcr-auth
 ```
+
 OCI HelmRepositories accept dockerconfigjson secrets; Flux also supports cloud-provider auth via .spec.provider (aws, azure, gcp) when pulling from ECR/ACR/GCR.  ￼
-
-
-
-⸻
-
-If you tell me which repo you’re targeting (URL + whether it’s HTTP/S or OCI), I’ll paste the exact YAML for your case.
