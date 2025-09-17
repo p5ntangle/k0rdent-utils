@@ -11,7 +11,7 @@ before using it in production.
 The following docs can be found in the docs folder.
 
 * [Cluster Templates Guide](https://github.com/p5ntangle/k0rdent-utils/tree/main/docs/cluster-templates.md)
-* [provider Templates Guide](https://github.com/p5ntangle/k0rdent-utils/tree/main/docs/providers.md)
+* [Provider Templates Guide](https://github.com/p5ntangle/k0rdent-utils/tree/main/docs/providers.md)
 
 ## Templates
 

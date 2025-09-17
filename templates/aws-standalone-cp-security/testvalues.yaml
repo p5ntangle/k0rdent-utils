@@ -1,0 +1,19 @@
+# Test values for aws-standalone-cp-security
+    controlPlane:
+      instanceType: t3.xlarge
+    controlPlaneNumber: 1
+    publicIP: true
+    region: us-west-1
+    worker:
+      instanceType: m5a.4xlarge
+      rootVolumeSize: 200
+      additionalNodeIngressRules:
+        - description: "Allow NodePort access to all nodes"
+          protocol: tcp
+          fromPort: 30000
+          toPort: 32767
+        - description: "Allow gRPC access to all nodes"
+          protocol: tcp
+          fromPort: 5111
+          toPort: 5111
+    workersNumber: 3
