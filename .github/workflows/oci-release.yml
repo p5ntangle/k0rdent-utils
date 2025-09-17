@@ -39,7 +39,7 @@ jobs:
     - name: Chart | Push
       uses: appany/helm-oci-chart-releaser@v0.4.2
       with:
-        name: cluster-api-provider-aws-1-0-5
+        name: cluster-api-provider-aws
         repository: p5ntangle/k0rdent-templates
         tag: 1.0.5
         path: templates/cluster-api-provider-aws
