@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'templates/aws-standalone-cp-security/**'
+      - 'templates/aws-standalone-cp-gpu/**'
+      - 'templates/cluster-api-provider-aws/**'
 jobs:
   release:
     permissions:
