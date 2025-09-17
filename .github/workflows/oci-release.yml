@@ -42,7 +42,7 @@ jobs:
         name: cluster-api-provider-aws-1-0-5
         repository: p5ntangle/k0rdent-templates
         tag: 1.0.5
-        path: templates/cluster-api-provider-aws-1-0-5
+        path: templates/cluster-api-provider-aws
         registry: ghcr.io
         registry_username: ${{ github.actor }}
         registry_password: ${{ secrets.GITHUB_TOKEN }}
